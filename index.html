@@ -56,19 +56,20 @@
                 </div>
                 <div class="col-md-5 center-item">
                   <div class="input-group number-spinner">
-                    <button class="btn btn-default">
+                    <button id="caseMinus" class="btn btn-default">
                       <i class="fas fa-minus"></i>
                     </button>
                     <input
+                      id="caseQnt"
                       type="text"
                       class="form-control text-center"
                       value="1"
                     />
-                    <button class="btn btn-default">
+                    <button id="casePlus" class="btn btn-default">
                       <i class="fas fa-plus"></i>
                     </button>
                   </div>
-                  <h5>$59</h5>
+                  <h5>$ <span id="caseAmount">59</span></h5>
                   <img src="images/remove.png" alt="" class="remove-item" />
                 </div>
               </div>
@@ -83,9 +84,9 @@
                 </div>
 
                 <div class="col-md-4 status">
-                  <h5>$1,278</h5>
-                  <h5>$0</h5>
-                  <h5>$1,278</h5>
+                  <h5>$ <span id="subTotal">1278</span></h5>
+                  <h5>$ <span id="tax">25</span></h5>
+                  <h5>$<span id="Total">1253</span></h5>
                 </div>
               </div>
             </div>
@@ -103,44 +104,111 @@
       const iphonePlusBtn = document.getElementById("iphonePlus");
       iphonePlusBtn.addEventListener("click", function() {
         const itemQnt = Qnt("iphoneQnt");
-
         const iphoneQntAdd = UpdateSpanTextPlus("iphoneQnt", itemQnt);
-        updateAmount("iphoneAmount", iphoneQntAdd);
+        updateAmount("iphoneAmount", iphoneQntAdd, 1219);
+
+        const subTotal = parseFloat(
+          document.getElementById("subTotal").innerText
+        );
+        const FinalSubTotal = subTotal + 1219;
+        document.getElementById("subTotal").innerText = FinalSubTotal;
+        const Total = parseFloat(document.getElementById("Total").innerText);
+        const Tax = parseFloat(document.getElementById("tax").innerText);
+        const FinalTotal = FinalSubTotal - Tax;
+        document.getElementById("Total").innerText = FinalTotal;
+      });
+
+      //iphoneMinusBtn Event Listener
+      const iphoneMinusBtn = document.getElementById("iphoneMinus");
+      iphoneMinusBtn.addEventListener("click", function() {
+        const itemQnt = Qnt("iphoneQnt");
+        if (itemQnt > 1) {
+          const iphoneQntDown = UpdateSpanTextMinus("iphoneQnt", itemQnt);
+          updateAmount("iphoneAmount", iphoneQntDown, 1219);
+        } else {
+          return false;
+        }
+
+        const subTotal = parseFloat(
+          document.getElementById("subTotal").innerText
+        );
+        const FinalSubTotal = subTotal - 1219;
+        document.getElementById("subTotal").innerText = FinalSubTotal;
+        const Total = parseFloat(document.getElementById("Total").innerText);
+        const Tax = parseFloat(document.getElementById("tax").innerText);
+        const FinalTotal = FinalSubTotal - Tax;
+        document.getElementById("Total").innerText = FinalTotal;
+      });
+
+      const casePlusBtn = document.getElementById("casePlus");
+      casePlusBtn.addEventListener("click", function() {
+        const itemQnt = Qnt("caseQnt");
+        const iphoneQntAdd = UpdateSpanTextPlus("caseQnt", itemQnt);
+        updateAmount("caseAmount", iphoneQntAdd, 59);
+
+        const subTotal = parseFloat(
+          document.getElementById("subTotal").innerText
+        );
+        const FinalSubTotal = subTotal + 59;
+        document.getElementById("subTotal").innerText = FinalSubTotal;
+        const Total = parseFloat(document.getElementById("Total").innerText);
+        const Tax = parseFloat(document.getElementById("tax").innerText);
+        const FinalTotal = FinalSubTotal - Tax;
+        document.getElementById("Total").innerText = FinalTotal;
+      });
+
+      const caseMinusBtn = document.getElementById("caseMinus");
+      caseMinusBtn.addEventListener("click", function() {
+        const itemQnt = Qnt("caseQnt");
+        if (itemQnt > 1) {
+          const iphoneQntDown = UpdateSpanTextMinus("caseQnt", itemQnt);
+          updateAmount("caseAmount", iphoneQntDown, 59);
+        } else {
+          return false;
+        }
+        const subTotal = parseFloat(
+          document.getElementById("subTotal").innerText
+        );
+        const FinalSubTotal = subTotal - 59;
+        document.getElementById("subTotal").innerText = FinalSubTotal;
+        const Total = parseFloat(document.getElementById("Total").innerText);
+        const Tax = parseFloat(document.getElementById("tax").innerText);
+        const FinalTotal = FinalSubTotal - Tax;
+        document.getElementById("Total").innerText = FinalTotal;
       });
 
       function UpdateSpanTextPlus(id, itemQnt) {
         const iphoneQntAdd = 1 + itemQnt;
-        document.getElementById("iphoneQnt").value = iphoneQntAdd;
+        document.getElementById(id).value = iphoneQntAdd;
         return iphoneQntAdd;
-      }
-      function Qnt(id) {
-        const Qnt = parseFloat(document.getElementById(id).value);
-        return Qnt;
-      }
-
-      function updateAmount(id, currentQnt) {
-        const iphoneAmount = parseFloat(document.getElementById(id).innerText);
-        const iphoneAmountUpdate = currentQnt * 1219;
-        document.getElementById(id).innerText = iphoneAmountUpdate;
       }
 
       function UpdateSpanTextMinus(id, itemQnt) {
         if (itemQnt > 1) {
           var iphoneQntDown = itemQnt - 1;
-          document.getElementById("iphoneQnt").value = iphoneQntDown;
+          document.getElementById(id).value = iphoneQntDown;
           return iphoneQntDown;
         } else {
           return false;
         }
       }
 
-      //iphoneMinusBtn Event Listener
-      const iphoneMinusBtn = document.getElementById("iphoneMinus");
-      iphoneMinusBtn.addEventListener("click", function() {
-        const itemQnt = Qnt("iphoneQnt");
-        const iphoneQntDown = UpdateSpanTextMinus("iphoneQnt", itemQnt);
-        updateAmount("iphoneAmount", iphoneQntDown);
-      });
+      function Qnt(id) {
+        const Qnt = parseFloat(document.getElementById(id).value);
+        return Qnt;
+      }
+
+      function updateAmount(id, currentQnt, pricePerItem) {
+        if (currentQnt > 0) {
+          const iphoneAmount = parseFloat(
+            document.getElementById(id).innerText
+          );
+          const iphoneAmountUpdate = currentQnt * pricePerItem;
+          document.getElementById(id).innerText = iphoneAmountUpdate;
+        } else {
+          return 0;
+        }
+      }
     </script>
   </body>
 </html>
